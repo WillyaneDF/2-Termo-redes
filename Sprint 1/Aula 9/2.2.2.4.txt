@@ -1,0 +1,7 @@
+pc3 gateway estava incorreto - solução alterar o gateway
+
+ativar a g0/1.30 do r1
+
+alterar os encapsulations no router 
+
+criar a vlan 99 no switch e coloca-la no modo trunk

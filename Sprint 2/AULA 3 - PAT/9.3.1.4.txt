@@ -1,0 +1,40 @@
+PC1 não Ping Server1 64.100.201.5
+PC2 não Ping Server1 64.100.201.5
+L1 não Ping Server1 64.100.201.5
+L2 não Ping Server1 64.100.201.5
+R2 Ping Server1 64.100.201.5 com sucesso
+
+#show running-config
+Verifique que as interface estão invertidas
+inside x outside
+
+Etapa 3
+en
+conf t
+interface serial 0/0/0
+ip nat outside
+exit
+interface serial 0/0/1
+ip nat inside
+exit
+
+Etapa 4
+PC1 e PC2 estão pingando
+L1 e L2 não estão pingando
+R2 Ping Server1 64.100.201.5 com sucesso
+
+Etapa 5
+show ip nat translations
+Só aparece IPs da rede 10.4.10
+
+Etapa 6
+Veja a ACL no Runing
+show running-config
+access-list 101 permit ip 10.4.10.0 0.0.0.255 any
+
+Etapa 7
+
+en
+conf t
+no access-list 101
+access-list 101 permit ip 10.4.10.0 0.0.1.255 any

@@ -1,0 +1,44 @@
+5.3.1.2
+
+
+enable 
+conf t
+hostname S1
+banner motd "cWarningc"
+line console 0
+password cisco
+login
+enable secret class
+service password-encryption
+interface vlan 1
+ip address 10.10.10.2 255.255.255.0
+no shutdown
+exit
+ip domain-name cisco.com
+username admin privilege 15 secret ccna
+crypto key generate rsa general-key modulus 1024
+line vty 0 15
+transport input ssh
+login local
+exit
+ip ssh version 2
+interface range fa0/1
+switchport mode access
+switchport port-security 
+switchport port-security maximum 2
+switchport port-security mac-address sticky
+switchport port-security mac-address sticky 00E0.B027.2245
+switchport port-security violation shutdown
+interface range fa0/2
+switchport mode access
+switchport port-security 
+switchport port-security maximum 2
+switchport port-security mac-address sticky
+switchport port-security mac-address sticky 0001.647C.697E
+switchport port-security violation shutdown
+interface range fa0/3-24
+shutdown
+interface range g0/1-2
+shutdown
+do wr
+

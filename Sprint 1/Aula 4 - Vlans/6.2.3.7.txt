@@ -1,0 +1,53 @@
+Objetivos
+
+Parte 1: Testar a conectividade entre PCs na mesma VLAN
+
+Parte 2: Investigar problemas de conectividade coletando dados
+
+Parte 3: Implementar a solução e testar a conectividade
+
+
+show run
+
+
+ip pc 6 alterado = estava incorreto 
+
+
+
+s1
+interface g0/1
+switchport mode trunk
+switchport trunk native vlan 99
+
+
+
+s2 
+interface f0/11
+switchport mode access
+switchport access vlan 10
+interface g0/1
+switchport mode trunk
+switchport trunk native vlan 99
+
+interface g0/1
+switchport mode trunk
+switchport trunk native vlan 99
+
+
+
+s3
+conf t
+interface f0/18
+switchport mode access
+switchport access vlan 20
+interface f0/06
+switchport mode access
+switchport access vlan 30
+
+
+
+
+
+show run
+show interface trunk = para verificar as interfaces trunk
+show interface switchport = para verificar se alterou a vlan 99

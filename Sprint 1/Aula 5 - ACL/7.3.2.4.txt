@@ -1,0 +1,9 @@
+enable
+conf t
+interface g0/0
+ip access-group FROM_192 out
+ip access-list standard FROM_10
+no deny host 10.0.0.22
+5 deny host 10.0.0.2
+do wr
+

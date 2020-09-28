@@ -1,0 +1,66 @@
+S1
+
+enable
+conf t
+vlan 10
+name Faculty/Staff
+vlan 20
+name Students
+vlan 30
+name Guest(Default)
+vlan 99
+name Management&Native
+vlan 150
+name VOICE
+do wr
+
+S2
+enable
+conf t
+vlan 10
+name Faculty/Staff
+vlan 20
+name Students
+vlan 30
+name Guest(Default)
+vlan 99
+name Management&Native
+vlan 150
+name VOICE
+interface f0/11
+switchport mode access
+switchport access vlan 10
+interface f0/18
+switchport mode access
+switchport access vlan 20
+interface f0/6
+switchport mode access
+switchport access vlan 30
+do wr
+
+s3
+
+enable
+conf t
+vlan 10
+name Faculty/Staff
+vlan 20
+name Students
+vlan 30
+name Guest(Default)
+vlan 99
+name Management&Native
+vlan 150
+name VOICE
+interface f0/11
+switchport mode access
+switchport access vlan 10
+mls qos trust cos
+switchport voice vlan 150
+interface f0/18
+switchport mode access
+switchport access vlan 20
+interface f0/6
+switchport mode access
+switchport access vlan 30
+do wr

@@ -1,0 +1,30 @@
+telnet 10.10.12.2
+senha cisco 
+
+
+
+show running 
+
+
+
+enable
+conf t
+ip domain-name netadca.pka
+crypto key generate rsa general-key modulus 1024
+username administrator secret cisco
+line vty 0 15
+no password
+login local
+transport input ssh
+exit
+ip ssh version 2
+service password-encryption 
+do wr
+
+
+
+ssh -l administrator 10.10.10.2
+cisco
+
+
+

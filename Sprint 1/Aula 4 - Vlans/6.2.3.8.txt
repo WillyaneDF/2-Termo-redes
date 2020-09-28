@@ -1,0 +1,60 @@
+
+show run
+
+
+
+s1- 
+enable 
+conf t
+vlan 10
+name Faculty/Staff
+vlan 20
+name Students
+vlan 30
+name Guest(Default)
+vlan 56
+name Management&Native
+interface g0/1
+switchport mode trunk
+switchport trunk native vlan 56
+interface g0/2
+switchport mode trunk
+switchport trunk native vlan 56
+do wr
+
+s2-
+
+enable
+conf t
+interface g0/1
+switchport mode trunk
+switchport trunk native vlan 56
+do wr
+
+s3- 
+
+enable 
+conf t
+interface range f0/1-5 
+switchport mode access
+switchport access vlan 56
+interface range f0/6-10 
+switchport mode access
+switchport access vlan 30
+interface range f0/11-17 
+switchport mode access
+switchport access vlan 10
+interface range f0/18-24 
+switchport mode access
+switchport access vlan 20
+interface g0/2
+switchport mode trunk
+switchport trunk native vlan 56
+do wr
+
+
+
+
+show run
+show interface trunk = para verificar as interfaces trunk
+show interface switchport = para verificar se alterou a vlan 99

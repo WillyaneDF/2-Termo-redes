@@ -1,0 +1,193 @@
+	S1
+en
+conf t
+no ip domain-lookup
+hostname S1
+service password-encryption
+banner motd & Não esta autorizado acesso &
+enable secret class
+line console 0
+password cisco
+login
+logging synchronous
+exit
+line vty 0 15
+password cisco
+login
+exit
+
+interface range f0/1-5, f0/7-24, g0/1-2
+shutdown
+exit
+
+vlan 99
+name Gerenciamento
+vlan 10
+name Coordenacao
+exit
+
+int f0/6
+switchport mode access
+switchport access vlan 10
+exit
+
+int vlan 99
+ip add 192.168.99.11 255.255.255.0
+no shutdown
+exit
+
+interface range f0/3-4
+switchport mode trunk
+shutdown
+channel-group 1 mode desirable
+no shutdown
+exit
+
+int port-channel 1
+switchport mode trunk
+switchport trunk native vlan 99
+exit
+
+interface range f0/1-2
+switchport mode trunk
+shutdown
+channel-group 2 mode active
+no shutdown
+exit
+
+int port-channel 2
+switchport mode trunk
+switchport trunk native vlan 99
+exit
+
+
+end
+wr
+	S2
+en
+conf t
+no ip domain-lookup
+hostname S2
+service password-encryption
+banner motd & Não esta autorizado acesso &
+enable secret class
+line console 0
+password cisco
+login
+logging synchronous
+exit
+line vty 0 15
+password cisco
+login
+exit
+
+interface range f0/1-17, f0/19-24, g0/1-2
+shutdown
+exit
+
+vlan 99
+name Gerenciamento
+vlan 10
+name Coordenacao
+exit
+
+int f0/18
+switchport mode access
+switchport access vlan 10
+exit
+
+int vlan 99
+ip add 192.168.99.12 255.255.255.0
+no shutdown
+exit
+
+interface range f0/1-2
+switchport mode trunk
+shutdown
+channel-group 2 mode passive
+no shutdown
+exit
+
+int port-channel 2
+switchport mode trunk
+switchport trunk native vlan 99
+exit
+
+interface range f0/3-4
+switchport mode trunk
+shutdown
+channel-group 3 mode active
+no shutdown
+exit
+
+int port-channel 3
+switchport mode trunk
+switchport trunk native vlan 99
+exit
+
+end
+wr
+	S3
+en
+conf t
+no ip domain-lookup
+hostname S3
+service password-encryption
+banner motd & Não esta autorizado acesso &
+enable secret class
+line console 0
+password cisco
+login
+logging synchronous
+exit
+line vty 0 15
+password cisco
+login
+exit
+
+interface range f0/1-17, f0/19-24, g0/1-2
+shutdown
+exit
+
+vlan 99
+name Gerenciamento
+vlan 10
+name Coordenacao
+exit
+
+int f0/18
+switchport mode access
+switchport access vlan 10
+exit
+
+int vlan 99
+ip add 192.168.99.13 255.255.255.0
+no shutdown
+exit
+
+interface range f0/3-4
+switchport mode trunk
+shutdown
+channel-group 1 mode auto
+no shutdown
+exit
+
+int port-channel 1
+switchport mode trunk
+switchport trunk native vlan 99
+exit
+
+interface range f0/1-2
+switchport mode trunk
+shutdown
+channel-group 3 mode passive
+no shutdown
+exit
+
+int port-channel 3
+switchport mode trunk
+switchport trunk native vlan 99
+exit
+
+end
+wr

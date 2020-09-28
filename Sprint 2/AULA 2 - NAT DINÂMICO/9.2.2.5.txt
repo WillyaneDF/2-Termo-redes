@@ -1,0 +1,18 @@
+	R2
+en
+conf t
+
+interface serial 0/0/0
+ip nat outside 
+exit
+interface serial 0/0/1
+ip nat inside
+
+access-list 1 permit 172.16.0.0 0.0.255.255
+
+ip nat pool NAT-DINAMIC 209.165.76.196 209.165.76.199 netmask 255.255.255.248
+
+ip nat inside source list 1 pool NAT-DINAMIC
+
+
+

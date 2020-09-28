@@ -1,0 +1,112 @@
+	R1
+en
+conf t
+router eigrp 1
+passive-interface default
+no passive-interface serial 0/0/0
+no auto-summary
+network 172.31.0.0
+
+!Conf de Intervalo
+int serial 0/0/0
+ip hello-interval eigrp 1 10
+
+	R2
+en
+conf t
+router eigrp 1
+passive-interface default
+no passive-interface serial 0/0/1
+no auto-summary
+network 10.0.0.0
+
+!Conf de Intervalo
+int serial 0/0/1
+ip hello-interval eigrp 1 10
+
+	IPv4-Edge
+en
+conf t
+router eigrp 1
+passive-interface default
+no passive-interface serial 0/0/0
+no passive-interface serial 0/0/1
+network 172.31.6.0 0.0.0.3
+network 10.10.8.0 0.0.0.3
+exit
+
+!Gateay Padrao
+ip route 0.0.0.0 0.0.0.0 serial 0/1/0
+
+router eigrp 1
+redistribute static
+exit
+
+!Conf de Intervalo
+int serial 0/0/0
+ip hello-interval eigrp 1 10
+exit
+int serial 0/0/1
+ip hello-interval eigrp 1 10
+exit
+
+	
+
+	R3
+en
+conf t
+ipv6 unicast-routing
+ipv6 router eigrp 1
+eigrp router-id 3.3.3.3
+no shutdown
+exit
+int loopback 0
+ipv6 eigrp 1
+int loopback 1
+ipv6 eigrp 1
+int loopback 2
+ipv6 eigrp 1
+int loopback 3
+ipv6 eigrp 1
+int serial 0/0/0
+ipv6 eigrp 1
+exit
+
+	R4
+en
+conf t
+ipv6 unicast-routing
+ipv6 router eigrp 1
+eigrp router-id 4.4.4.4
+no shutdown
+exit
+int loopback 8
+ipv6 eigrp 1
+int loopback 9
+ipv6 eigrp 1
+int loopback 10
+ipv6 eigrp 1
+int loopback 11
+ipv6 eigrp 1
+int serial 0/0/1
+ipv6 eigrp 1
+exit
+
+	IPv6-Edge
+en
+conf t
+ipv6 unicast-routing
+ipv6 router eigrp 1
+eigrp router-id 1.1.1.1
+no shutdown
+exit
+int serial 0/0/0
+ipv6 eigrp 1
+int serial 0/0/1
+ipv6 eigrp 1
+exit
+
+ipv6 route ::/0 serial 0/1/0
+ipv6 router eigrp 1
+redistribute static
+exit

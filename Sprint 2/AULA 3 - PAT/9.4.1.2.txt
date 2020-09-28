@@ -1,0 +1,173 @@
+show vlan brief  - Veja que não tem VLAN configurada
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/1, Fa0/2, Fa0/3, Fa0/4
+                                                Fa0/5, Fa0/6, Fa0/7, Fa0/8
+                                                Fa0/9, Fa0/10, Fa0/11, Fa0/12
+                                                Fa0/13, Fa0/14, Fa0/15, Fa0/16
+                                                Fa0/17, Fa0/18, Fa0/19, Fa0/20
+                                                Fa0/21, Fa0/22, Fa0/23, Fa0/24
+
+
+                                                Gig0/1, Gig0/2
+	SWT - HQ-Sw
+
+en
+conf t
+
+!Configurar Dominio Cisco
+ip domain-name cisco.com
+
+!Configurar Usuario e Senha
+username HQadmin password ciscoclass
+
+!Criar chave
+crypto key generate rsa
+
+-----PREENCHER com o valor 1024-------------
+The name for the keys will be: Cnt-Sw.cisco.com
+Choose the size of the key modulus in the range of 360 to 2048 for your
+  General Purpose Keys. Choosing a key modulus greater than 512 may take
+  a few minutes.
+
+How many bits in the modulus [512]: 1024
+% Generating 1024 bit RSA keys, keys will be non-exportable...[OK]
+----------------------------
+
+!Configurar SSH v2
+ip ssh version 2
+ip ssh authentication-retries 2
+ip ssh time-out 60
+
+!Configurar acesso remoto para SSH
+line vty 0 15
+login local 
+transport input ssh
+exit
+
+!Configurar Senha Croptografada
+service password-encryption 
+
+
+!Criar VLANs
+vlan 15
+name Servidores
+vlan 30
+name PCs
+vlan 45
+name Nativa
+vlan 60
+name Gerenciamento
+exit
+
+!Configurar Interfaces e suas VLANs
+interface range fastEthernet 0/1-10
+switchport mode access 
+switchport access vlan 30
+exit
+interface range fastEthernet 0/11-20
+switchport mode access 
+switchport access vlan 15
+exit
+interface gigabitEthernet 0/1
+switchport mode trunk
+switchport trunk native vlan 45
+no shutdown
+exit
+
+!Configurar IP na VLAN 60 Gerenciamento
+interface vlan 60
+ip address 172.16.15.10 255.255.255.248
+no shutdown
+exit
+
+!Configurar Gateway Padrão
+ip default-gateway 172.16.15.9
+
+!Configurar Segurança de acesso ao Switch
+interface fastEthernet 0/1
+switchport port-security 
+switchport port-security maximum 2
+switchport port-security mac-address sticky
+switchport port-security violation restrict
+exit
+
+!Desativar interfaces não utilizadas
+interface range fastEthernet 0/21-24, gigabitEthernet 0/2
+shutdown
+
+
+	HQ
+
+en
+conf t
+
+!Configurar Dot1Q de acordo com as VLANs
+interface GigabitEthernet0/0.15
+encapsulation dot1Q 15
+ip address 172.16.15.17 255.255.255.240
+ip nat inside
+exit
+interface GigabitEthernet0/0.30
+encapsulation dot1Q 30
+ip address 172.16.15.33 255.255.255.224
+ip nat inside
+exit
+interface GigabitEthernet0/0.45
+encapsulation dot1Q 45 native
+ip address 172.16.15.1 255.255.255.248
+exit
+interface GigabitEthernet0/0.60
+encapsulation dot1Q 60
+ip address 172.16.15.9 255.255.255.248
+exit
+interface GigabitEthernet0/0
+no shutdown
+exit
+
+!Configurar DHCP
+ip dhcp pool LAN
+network 172.16.15.32 255.255.255.224
+default-router 172.16.15.33
+
+
+!Configurar RIP
+router rip
+version 2
+network 172.16.15.0
+no auto-summary
+passive-interface gi 0/0
+passive-interface serial 0/1/0
+passive-interface serial 0/1/1
+exit
+
+!Configurar Rota padrão
+ip route 0.0.0.0 0.0.0.0 serial 0/1/0
+
+!Configurar Rota padrão para o RIP
+router rip
+default-information originate
+exit
+
+!Pre Configurar NAT
+interface serial 0/1/0
+ip nat outside 
+exit
+interface serial 0/0/0
+ip nat inside 
+exit
+interface serial 0/0/1
+ip nat inside 
+exit
+
+!Configurar NAT Static
+ip nat inside source static 172.16.15.18 209.165.200.227
+
+!Configurar PAT
+access-list 1 permit 172.16.15.0 0.0.0.255
+ip nat pool IPs-Wan 209.165.200.225 209.165.200.226 netmask 255.255.255.252
+ip nat inside source list 1 pool IPs-Wan overload
+
+
+Configurar DHCP na Estação Staff

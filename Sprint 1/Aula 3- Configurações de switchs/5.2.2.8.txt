@@ -1,0 +1,19 @@
+5.2.2.8
+
+funcionário
+mudar do note para o pc 
+
+enable 
+conf t
+show status
+
+show port-sercurity interface fa 0/1
+
+show intaface fa0/1
+
+interface fa 0/1
+no shutdown
+
+
+5.ipconfig /all
+switchport port-security violation shutdown

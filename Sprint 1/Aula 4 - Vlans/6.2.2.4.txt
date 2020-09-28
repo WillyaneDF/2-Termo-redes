@@ -1,0 +1,32 @@
+S1
+
+enable
+conf t
+interface g0/1
+switchport mode trunk
+switchport trunk native vlan 99
+interface g0/2
+switchport mode trunk
+switchport trunk native vlan 99
+do wr
+
+
+S2
+enable
+conf t
+interface g0/1
+switchport trunk native vlan 99
+do wr
+
+s3
+enable
+conf t
+interface g0/2
+switchport trunk native vlan 99
+do wr
+
+
+
+
+show interface trunk = para verificar as interfaces trunk
+show interface switchport = para verificar se alterou a vlan 99

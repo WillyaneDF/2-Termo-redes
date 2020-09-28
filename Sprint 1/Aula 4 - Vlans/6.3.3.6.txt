@@ -1,0 +1,43 @@
+rt
+
+enable 
+conf t
+interface g0/0
+no shutdown
+interface g0/0.10
+encapsulation dot1q 10
+ip address 172.17.10.1 255.255.255.0
+interface g0/0.30
+encapsulation dot1q 30
+ip address 172.17.30.1 255.255.255.0
+no shutdown
+do wr
+
+
+s1 
+enable
+conf t
+vlan 10
+name VLAN0010
+vlan 30
+name VLAN0030
+interface f0/11
+switchport mode access
+switchport access vlan 10
+interface f0/6
+switchport mode access
+switchport access vlan 30
+interface g0/1
+switchport mode trunk
+switchport trunk native vlan 99
+do wr
+
+
+
+
+
+
+
+show run
+show interface trunk = para verificar as interfaces trunk
+show interface switchport = para verificar se alterou a vlan 99

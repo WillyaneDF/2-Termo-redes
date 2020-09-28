@@ -1,0 +1,66 @@
+S1
+
+enable
+conf t
+hostname S1
+int range f0/21-22
+switchport mode trunk
+shutdown
+channel-group 1 mode desirable
+no shutdown 
+exit
+int port-channel 1
+switchport mode trunk
+exit
+int range g0/1-2
+switchport mode trunk
+shutdown
+channel-group 2 mode active 
+no shutdown
+exit
+spanning-tree vlan 1 priority 24576
+do wr
+
+
+S2
+
+enable
+conf t
+hostname S2
+int range g0/1-2
+switchport mode trunk
+shutdown
+channel-group 2 mode active 
+no shutdown 
+int range f0/23-24
+switchport mode trunk
+shutdown
+channel-group 3 mode passive
+no shutdown 
+exit
+do wr
+
+
+S3
+
+enable
+conf t
+hostname S3
+int range f0/21-22
+switchport mode trunk
+shutdown
+channel-group 1 mode desirable
+no shutdown 
+exit
+int port-channel 1
+switchport mode trunk
+exit
+int range f0/23-24
+switchport mode trunk
+shutdown
+channel-group 3 mode active
+no shutdown 
+exit
+do wr
+
+ 

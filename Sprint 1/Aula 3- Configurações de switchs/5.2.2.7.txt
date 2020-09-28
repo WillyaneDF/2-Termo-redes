@@ -1,0 +1,24 @@
+5.2.2.7
+
+enable 
+conf t
+interface range fa0/1-2
+switchport port-security
+switchport port-security maximum 1
+switchport port-security mac-address sticky
+switchport port-security violation restrict
+interface range fa0/3-24
+shutdown
+interface range g0/1-2
+shutdown
+interface fa0/1 
+switchport port-security mac-address sticky 00E0.B027.2245
+interface fa0/2 
+switchport port-security mac-address sticky 0001.647C.697E
+do wr
+
+
+para verificar se as portas receberam o endereço mac 
+show port-security interface fa 0/1
+
+

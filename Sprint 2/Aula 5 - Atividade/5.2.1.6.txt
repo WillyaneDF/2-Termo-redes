@@ -1,0 +1,95 @@
+	R1
+Verificar Tabela de roteamento
+show ip route connected
+ C   192.168.1.0/24  is directly connected, Serial0/0/0
+ C   209.165.0.0/24  is directly connected, GigabitEthernet0/0
+
+Verificar Protocolo de roteamento
+show run
+
+!
+router rip
+ network 192.168.1.0
+ network 209.165.0.0
+!
+
+Verificar Protocolo Rip
+show ip route rip
+R    10.0.0.0/8 [120/1] via 192.168.1.1, 00:00:10, Serial0/0/0
+
+Ver tabela de roteamento
+show ip route
+
+Codes: 
+L - local
+C - connected
+S - static
+R - RIP
+O - OSPF
+
+Gateway of last resort is not set
+
+R  10.0.0.0/8 [120/1] via 192.168.1.1, 00:00:29, Serial0/0/0
+   192.168.1.0/24 is variably subnetted, 2 subnets, 2 masks
+C  192.168.1.0/24 is directly connected, Serial0/0/0
+L  192.168.1.2/32 is directly connected, Serial0/0/0
+   209.165.0.0/24 is variably subnetted, 2 subnets, 2 masks
+C  209.165.0.0/24 is directly connected, GigabitEthernet0/0
+L  209.165.0.1/32 is directly connected, GigabitEthernet0/0
+
+show ip interface brief
+GigabitEthernet0/0     209.165.0.1     YES manual up                 
+GigabitEthernet0/1     64.100.0.1      YES manual down 
+Serial0/0/0            192.168.1.2     YES manual up                
+
+Conectar um cabo do Switch S1 com R1
+Cadastrar Rota RIP
+en
+conf t
+router rip
+network 64.0.0.0
+exit
+
+	R2
+Verificar Tabela de roteamento
+show ip route connected
+ C   10.0.0.0/8  is directly connected, GigabitEthernet0/0
+ C   192.168.1.0/24  is directly connected, Serial0/0/0
+
+Verificar Protocolo de roteamento
+show run
+
+!
+router rip
+ network 10.0.0.0
+ network 192.168.1.0
+!
+
+Verificar Protocolo Rip
+show ip route rip
+     192.168.1.0/24 is variably subnetted, 2 subnets, 2 masks
+R    209.165.0.0/24 [120/1] via 192.168.1.2, 00:00:05, Serial0/0/0
+
+Ver tabela de roteamento
+show ip route
+
+Codes: 
+L - local
+C - connected
+S - static
+R - RIP
+O - OSPF
+
+Gateway of last resort is not set
+
+   10.0.0.0/8 is variably subnetted, 2 subnets, 2 masks
+C  10.0.0.0/8 is directly connected, GigabitEthernet0/0
+L  10.0.0.1/32 is directly connected, GigabitEthernet0/0
+   192.168.1.0/24 is variably subnetted, 2 subnets, 2 masks
+C  192.168.1.0/24 is directly connected, Serial0/0/0
+L  192.168.1.1/32 is directly connected, Serial0/0/0
+R  209.165.0.0/24 [120/1] via 192.168.1.2, 00:00:12, Serial0/0/0
+
+show ip interface brief
+GigabitEthernet0/0     10.0.0.1        YES manual up                 
+Serial0/0/0            192.168.1.1     YES manual up                 
