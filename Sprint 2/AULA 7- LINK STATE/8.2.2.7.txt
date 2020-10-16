@@ -1,0 +1,46 @@
+	R1
+en
+conf t
+router ospf 10
+router-id 1.1.1.1
+network 172.16.1.0 0.0.0.255 area 0
+network 172.16.3.0 0.0.0.3 area 0
+network 192.168.10.4 0.0.0.3 area 0
+passive-interface g 0/0
+exit
+end
+wr
+
+	R2
+en
+conf t
+router ospf 10
+router-id 2.2.2.2
+network 172.16.2.0 0.0.0.255 area 0
+network 172.16.3.0 0.0.0.3 area 0
+network 192.168.10.8 0.0.0.3 area 0
+passive-interface g 0/0
+exit
+end
+wr
+
+	R3
+en
+conf t
+router ospf 10
+router-id 3.3.3.3
+network 192.168.1.0 0.0.0.255 area 0
+network 192.168.10.4 0.0.0.3 area 0
+network 192.168.10.8 0.0.0.3 area 0
+passive-interface g 0/0
+exit
+end
+wr
+
+Mensagem de sucesso ao convergir as redes
+00:08:47: %OSPF-5-ADJCHG: Process 10, Nbr 1.1.1.1 on Serial0/0/0 from LOADING to FULL, Loading Done
+
+00:08:48: %OSPF-5-ADJCHG: Process 10, Nbr 2.2.2.2 on Serial0/0/1 from LOADING to FULL, Loading Done
+
+Visualizar redes aprendidas pelo OSPF
+show ip route ospf

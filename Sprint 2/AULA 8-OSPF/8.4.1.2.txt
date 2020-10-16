@@ -1,0 +1,121 @@
+	RA
+en
+conf t
+int g0/0
+ip add 172.31.0.1 255.255.254.0
+no shutdown
+exit
+int s0/0/0
+ip add 172.31.4.1 255.255.255.252
+no shutdown
+exit
+
+router ospf 1
+router-id 1.1.1.1
+passive-interface g0/0
+network 172.31.0.0 255.255.254.0 area 0
+network 172.31.4.0 255.255.255.252 area 0
+end
+
+
+	RB
+en
+conf t
+int g0/0
+ip add 172.31.2.1 255.255.254.0
+no shutdown
+exit
+
+ipv6 unicast-routing
+
+int g0/0
+ipv6 add 2001:DB8:1::1/64
+ipv6 add FE80::1 link-local
+exit
+
+int s0/0/0
+ip add 172.31.4.2 255.255.255.252
+no shutdown
+exit
+
+int s0/0/1
+ipv6 add 2001:DB8:2::1/64
+no shutdown
+exit
+
+|ativar roteamento IPv6 nas interfaces
+int s0/0/1
+ipv6 ospf 1 area 0
+exit
+
+router ospf 1
+router-id 2.2.2.2
+passive-interface g0/0
+network 172.31.2.0 255.255.254.0 area 0
+network 172.31.4.0 255.255.255.252 area 0
+exit
+
+ipv6 router ospf 1
+router-id 2.2.2.2
+end
+
+clear ipv6 ospf process
+[Confirmar com] y
+
+
+	RC
+en
+conf t
+ipv6 unicast-routing
+int g0/0
+ipv6 add 2001:DB8:3::1/64
+ipv6 add FE80::3 link-local
+no shutdown
+exit
+
+
+int s0/0/0
+no ip add
+ipv6 add 2001:DB8:2::2/64
+no shutdown
+exit
+
+int g0/0
+ipv6 ospf 1 area 0
+exit
+
+int s0/0/0
+ipv6 ospf 1 area 0
+exit
+
+
+ipv6 router ospf 1
+router-id 3.3.3.3
+end
+
+clear ipv6 ospf process
+[Confirmar com] y
+
+
+Configurar IPs no PCA
+IP 172.31.1.254
+MK 255.255.254.0
+GW 172.31.0.1
+
+Configurar IPs no PCB
+IP 172.31.3.254
+MK 255.255.254.0
+GW 172.31.2.1
+IPv6
+IP 2001:DB8:1::2/64
+IP Local FE80::2
+GW  FE80::1
+
+Configurar IPs no PCC
+IP 2001:DB8:3::2/64
+IP Local FE80::4
+GW  FE80::3
+
+show router ospf
+show router ospf neighbor 
+show router route-table 

@@ -1,0 +1,26 @@
+﻿	R2
+en
+conf t
+ip route 0.0.0.0 0.0.0.0 serial 0/1/0
+|verificar o OSPF e seu ID
+do show ip ospf
+router ospf 1
+default-information originate
+exit
+
+	R1 e R3
+en
+|verificar o OSPF e seu ID
+do show ip ospf
+do show run
+
+Verificar a rota antes e depois da propagação
+
+
+Avisos das rotas
+
+Sem configurar
+Gateway of last not set
+
+Configuradas
+Gateway of last resort is 192.168.10.9 to network 0.0.0.0
