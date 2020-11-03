@@ -1,0 +1,32 @@
+
+Verificar adjacencia entre os provedores
+
+
+	ISP1
+show ip bgp summary
+show ip bgp
+!Ver rotas
+	ISP2
+show ip bgp summary
+show ip bgp
+
+
+	OtherCo1
+en
+conf t
+router bgp 65002
+neighbor 1.1.1.9 remote-as 65003
+network 172.16.10.0 mask 255.255.255.0
+exit
+
+	ISP1
+show ip bgp 
+!Veja que a rede 172.16.10.0/24 já esta aparecendo
+
+	ACME1
+en
+conf t
+router bgp 65001
+neighbor 1.1.1.1 remote-as 65003
+network 192.168.0.0 mask 255.255.255.0
+exit

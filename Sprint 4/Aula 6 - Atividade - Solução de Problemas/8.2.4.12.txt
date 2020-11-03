@@ -1,0 +1,88 @@
+show spannig-tree
+	S2
+en
+senha: class
+conf t
+spanning-tree vlan 1,10,20 root primary
+exit
+
+Verificar que esta certo vlan 30,88
+	S3
+show spannig-tree
+
+
+Verificar portas trunk
+show interfaces trunk
+	S1 - ERRO não esta com VLAN Nativa
+en
+class
+conf t
+int range fa 0/1-4
+switchport trunk native vlan 99
+exit
+
+
+show run
+	S2 - OK
+show run
+	S3 - OK
+show run
+
+Verificar DHCP dos PCs
+
+Verificar Dot1Q e DHCP - OK
+	R3
+
+Verificar Modo trunk - ERRO
+	S3
+en
+class
+conf t
+int g 0/1
+switchport mode trunk
+
+Arrumar Gateway padrão
+	R2
+en
+class
+conf t
+no ip route 0.0.0.0 0.0.0.0 g0/0
+ip route 0.0.0.0 0.0.0.0 g0/1
+
+Verificar EIGRP
+R1,R2 e R3 estão certos
+
+Verificar NAT - OK
+show run
+
+NAT - Interfaces estão invertidas no 
+	R2
+en
+conf t
+int g 0/0
+no ip nat outside
+ip nat inside
+int g 0/1
+ip nat outside 
+
+Verificar FRAME Relay
+R1 s0/0/0 - R2 s0/0/0
+en
+conf t
+int s 0/0/0
+encapsulation frame-relay
+exit
+
+Verificar HDLC - OK
+R1 s0/0/1 - R3 s0/0/0
+show int s 0/0/0
+
+Verificar PPP e CHAP - ERRO
+R2 s0/0/1 - R3 s0/0/1
+show run
+
+Usuário errado R1
+en
+class
+conf t
+username R3 password 0 ciscoccna
